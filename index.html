@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slip Desk Pro v19</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root {
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --mut: #64748b;
+  --bd: #cbd5e1;
+  --ac: #1d4ed8;
+  --ac-soft: #eff6ff;
+  --card: #ffffff;
+  --ok: #15803d;
+  --err: #b91c1c;
+  --err-soft: #fef2f2;
+  --warn-bg: #fefce8;
+  --warn-bd: #fde047;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f172a;
+    --fg: #f1f5f9;
+    --mut: #94a3b8;
+    --bd: #334155;
+    --ac: #60a5fa;
+    --ac-soft: #1e293b;
+    --card: #1e293b;
+    --ok: #4ade80;
+    --err: #f87171;
+    --err-soft: #450a0a;
+    --warn-bg: #422006;
+    --warn-bd: #854d0e;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0 auto;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  max-width: 520px;
+  padding: 12px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+h1 { font-size: 20px; margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--ac-soft);
+  color: var(--ac);
+  border: 1px solid var(--bd);
+}
+select, input, button, textarea {
+  font: inherit;
+  color: var(--fg);
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+select:focus, input:focus, textarea:focus {
+  outline: 2px solid var(--ac);
+  outline-offset: -1px;
+}
+button {
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.05s ease, opacity 0.15s ease;
+}
+button:active { transform: scale(0.98); }
+button.p {
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+}
+button.bt {
+  background: #0f766e;
+  color: #fff;
+  border-color: #0f766e;
+}
+button.danger {
+  color: var(--err);
+  border-color: var(--err);
+  background: var(--err-soft);
+}
+.row { display: flex; gap: 8px; margin: 8px 0; }
+.row > * { flex: 1; min-width: 0; }
+.tabs {
+  background: var(--card);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--bd);
+}
+.tabs button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 8px 4px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+.tabs .on {
+  background: var(--ac);
+  color: #fff;
+}
+.head-box {
+  background: var(--card);
+  border: 1.5px solid var(--ac);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+.head-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ac);
+  margin-bottom: 4px;
+}
+.head-box .row { margin: 4px 0 0; }
+#head { font-weight: 700; font-size: 16px; }
+.rules-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0;
+}
+.pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  color: var(--mut);
+}
+.pill b { color: var(--fg); }
+#inp {
+  width: 100%;
+  font-size: 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  line-height: 1.35;
+}
+#errbox {
+  background: var(--err-soft);
+  color: var(--err);
+  border: 1px solid var(--err);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  margin: 6px 0;
+}
+#list {
+  height: 42vh;
+  min-height: 260px;
+  overflow-y: auto;
+  border: 1.5px solid var(--bd);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 8px 0;
+  background: var(--card);
+}
+.line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bd);
+  font-size: 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.line:last-child { border-bottom: 0; }
+.line .main { flex: 1; word-break: break-word; cursor: pointer; }
+.tag {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--ac-soft);
+  color: var(--ac);
+  letter-spacing: 0.03em;
+}
+.del-x {
+  color: var(--mut);
+  text-decoration: none;
+  font-size: 18px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.del-x:hover { color: var(--err); background: var(--err-soft); }
+.breakdown-card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.b-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.b-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: var(--bg);
+}
+.b-item span:first-child { color: var(--mut); font-weight: 600; }
+.b-item span:last-child { font-weight: 700; font-family: monospace; font-size: 14px; }
+.tot {
+  font-weight: 800;
+  font-size: 22px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--bd);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#add, #gen { font-size: 17px; padding: 13px; }
+.h {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  margin: 8px 0;
+  cursor: pointer;
+}
+.h small { color: var(--mut); }
+.stat-group {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.stat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--bd);
+}
+.stat-head b { font-size: 15px; }
+.stat-head span {
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--ac);
+}
+.stat-vals {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.grand-box {
+  background: var(--ac-soft);
+  border: 1.5px solid var(--ac);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 800;
+  font-size: 19px;
+}
+.hide { display: none !important; }
+#slip {
+  background: #fff;
+  color: #000;
+  border: 1px dashed #666;
+  padding: 12px;
+  margin: 10px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+}
+#slip h2 { text-align: center; margin: 4px 0 6px; font-size: 18px; }
+#slip .ts { text-align: right; font-size: 12px; }
+#slip .l { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+#slip hr { border: 0; border-top: 1px dashed #000; margin: 6px 0; }
+.bt-box {
+  background: var(--card);
+  border: 1.5px solid #0f766e;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 8px 0;
+}
+.bt-status {
+  font-size: 12px;
+  color: var(--mut);
+  margin-top: 6px;
+  line-height: 1.35;
+}
+.note-box {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-bd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+@media print {
+  body > *:not(#slipwrap) { display: none !important; }
+  #slipwrap .no { display: none !important; }
+  #slip { border: 0; margin: 0; padding: 2px; width: 58mm; }
+  @page { margin: 2mm; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Slip Desk</h1>
+    <span class="badge" id="syncBadge">v19 · Extra Cut</span>
+  </header>
+
+  <div class="row tabs">
+    <button id="t1" class="on">New Slip</button>
+    <button id="t2">History (<span id="hc">0</span>)</button>
+    <button id="t3">Data</button>
+    <button id="t4">Sync / Backup</button>
+  </div>
+
+  <!-- TAB 1: NEW SLIP -->
+  <div id="desk">
+    <div class="head-box">
+      <div class="head-label">
+        <span>Active Heading (Saves Under This Header)</span>
+        <span id="draftState">Auto-saved</span>
+      </div>
+      <div class="row">
+        <select id="head"></select>
+        <button id="edit" style="flex:0 0 auto">Rename</button>
+        <button id="addHead" class="p" style="flex:0 0 auto">+ New</button>
+      </div>
+      <div class="row hide" id="erow">
+        <input id="ename" placeholder="Enter heading name">
+        <button id="esave" class="p" style="flex:0 0 auto">Save Header</button>
+      </div>
+    </div>
+
+    <div class="rules-bar">
+      <span class="pill"><b>1d:</b> 0–9</span>
+      <span class="pill"><b>2d:</b> 00–99</span>
+      <span class="pill"><b>3d:</b> 000–999</span>
+      <span class="pill"><b>JK:</b> 1×3 / 3×1</span>
+      <span class="pill"><b>SANGAM:</b> 3×3</span>
+      <span class="pill"><b>Group =:</b> 12, 34, 56=200</span>
+    </div>
+
+    <div class="row">
+      <textarea id="inp" rows="3" placeholder="Group fill: 12, 34, 56, 78, 90=200&#10;Or multi-line: 12 / 34 / 56=200&#10;Signs: = * # ₹ &amp; @ - € ¢ £ $"></textarea>
+    </div>
+    <div id="errbox" class="hide"></div>
+    <div class="row">
+      <button id="add" class="p">Add Entry</button>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="breakdown-card">
+      <div class="b-grid" id="liveBreakdown"></div>
+      <div class="tot">
+        <span>Grand Total</span>
+        <span id="total">0</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="gen" class="p">Generate &amp; Save Slip</button>
+      <button id="clr">Clear</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORY -->
+  <div id="hist" class="hide">
+    <div class="row">
+      <input id="hsearch" placeholder="Search heading or entry...">
+      <select id="hfilter" style="flex:0 0 42%"></select>
+    </div>
+    <div id="hlist"></div>
+  </div>
+
+  <!-- TAB 3: DATA SUMMARY (5 PARTS) -->
+  <div id="data" class="hide">
+    <div class="row">
+      <select id="dsel"></select>
+      <button id="dcopy" class="p" style="flex:0 0 auto">Copy Report</button>
+    </div>
+    <div id="dout"></div>
+    <textarea id="dtxt" readonly rows="8" style="width:100%;font-family:monospace;font-size:13px;margin-top:8px"></textarea>
+    <div class="row">
+      <button id="dreset" class="danger">Delete Heading Data</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: DOMAIN SYNC & BACKUP -->
+  <div id="sync" class="hide">
+    <div class="note-box">
+      <b>Self-Hosted Domain Ready:</b> Works offline in browser storage automatically, or connect a custom REST API endpoint below to sync slips across devices on your own domain.
+    </div>
+
+    <div class="stat-group">
+      <div class="stat-head"><b>Backup &amp; Transfer (JSON / CSV)</b></div>
+      <div class="row">
+        <button id="expJson" class="p">Export Backup (.json)</button>
+        <button id="expCsv">Export Excel (.csv)</button>
+      </div>
+      <div class="row">
+        <input type="file" id="impFile" accept=".json" style="padding:7px">
+        <button id="impBtn" style="flex:0 0 auto">Restore</button>
+      </div>
+    </div>
+
+    <div class="stat-group">
+      <div class="stat-head"><b>Optional Cloud Webhook / API Sync</b></div>
+      <div class="row">
+        <input id="apiUrl" placeholder="https://your-domain.com/api/slips">
+      </div>
+      <div class="row">
+        <input id="apiKey" type="password" placeholder="Optional Bearer Token / Secret Key">
+      </div>
+      <div class="row">
+        <button id="saveApi" class="p">Save Endpoint</button>
+        <button id="syncNow">Sync Now</button>
+      </div>
+      <div id="syncMsg" style="font-size:13px;color:var(--mut);margin-top:4px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRINTABLE / SHAREABLE SLIP VIEW -->
+<div id="slipwrap" class="hide">
+  <div id="slip"></div>
+
+  <div class="bt-box no">
+    <div style="font-size:12px;font-weight:700;color:#0f766e;margin-bottom:4px">
+      CONTINUOUS DIRECT BLUETOOTH PRINT (SEZNIK 58mm)
+    </div>
+    <div class="row" style="margin:4px 0">
+      <button id="btPrint" class="bt">Bluetooth Print (GS v 0)</button>
+    </div>
+    <div class="bt-status" id="btStatus">Ready. Streams complete slip continuously without mid-slip pauses.</div>
+  </div>
+
+  <div class="row no">
+    <button id="copy" class="p">Copy Slip</button>
+    <button id="shareBtn">Share</button>
+    <button id="print">Browser Print</button>
+  </div>
+  <div class="row no">
+    <button id="sdel" class="danger">Delete Slip</button>
+    <button id="back">Close / New Slip</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  var WARN = "चिट्टी तपासून घेणे नंतर तक्रार चालणार नाही.";
+  var CATS = ["Single digits", "Double digits", "Triple digits", "JK DATA", "SANGAM DATA"];
+  var SHORT_CATS = ["1-Digit", "2-Digit", "3-Digit", "JK", "Sangam"];
+  var SIGNS = /[*#₹&@\-€¢£$=]/;
+
+  var $ = function(id) { return document.getElementById(id); };
+
+  function ld(k, d) {
+    try {
+      var v = localStorage.getItem(k);
+      return v ? JSON.parse(v) : d;
+    } catch (e) { return d; }
+  }
+  function sv(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function(c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function round2(n) {
+    return Math.round((Number(n) || 0) * 100) / 100;
+  }
+  function stamp(t) {
+    var d = new Date(t);
+    return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  // Reliable clipboard copy with synchronous fallback for Chrome Android/Desktop
+  function copyTextReliable(text, btn, defaultLabel) {
+    var done = function(ok) {
+      if (!btn) return;
+      btn.textContent = ok ? "Copied ✓" : "Copy Failed";
+      setTimeout(function() { btn.textContent = defaultLabel; }, 1600);
+    };
+
+    function legacyCopy() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function() {
+        done(true);
+      }).catch(function() {
+        done(legacyCopy());
+      });
+    } else {
+      done(legacyCopy());
+    }
+  }
+
+  // Safe arithmetic evaluator
+  function evalMath(expr) {
+    var s = String(expr).replace(/,/g, "").replace(/\s+/g, "");
+    if (!s || !/^[0-9+\-*/().]+$/.test(s)) return NaN;
+    var tokens = s.match(/(\d+\.?\d*|\.\d+|[+\-*/()])/g);
+    if (!tokens || tokens.join("") !== s) return NaN;
+    var pos = 0;
+
+    function parseExpr() {
+      var val = parseTerm();
+      while (pos < tokens.length && (tokens[pos] === "+" || tokens[pos] === "-")) {
+        var op = tokens[pos++];
+        var right = parseTerm();
+        val = op === "+" ? val + right : val - right;
+      }
+      return val;
+    }
+    function parseTerm() {
+      var val = parseFactor();
+      while (pos < tokens.length && (tokens[pos] === "*" || tokens[pos] === "/")) {
+        var op = tokens[pos++];
+        var right = parseFactor();
+        if (op === "/" && right === 0) return NaN;
+        val = op === "*" ? val * right : val / right;
+      }
+      return val;
+    }
+    function parseFactor() {
+      if (tokens[pos] === "+") { pos++; return parseFactor(); }
+      if (tokens[pos] === "-") { pos++; return -parseFactor(); }
+      if (tokens[pos] === "(") {
+        pos++;
+        var val = parseExpr();
+        if (tokens[pos] !== ")") return NaN;
+        pos++;
+        return val;
+      }
+      var num = parseFloat(tokens[pos++]);
+      return isFinite(num) ? num : NaN;
+    }
+
+    var res = parseExpr();
+    if (pos !== tokens.length || !isFinite(res)) return NaN;
+    return round2(res);
+  }
+
+  // Strict numerical classification into the 5 allowed categories
+  function classifyNumber(rawNum) {
+    var clean = String(rawNum).trim();
+    if (!clean) return { ok: false, error: "Empty number" };
+
+    var pair = clean.match(/^(\d+)\s*[xX×]\s*(\d+)$/);
+    if (pair) {
+      var a = pair[1], b = pair[2];
+      var la = a.length, lb = b.length;
+      if ((la === 1 && lb === 3) || (la === 3 && lb === 1)) {
+        return { ok: true, norm: a + "x" + b, catIndex: 3, catName: CATS[3] };
+      }
+      if (la === 3 && lb === 3) {
+        return { ok: true, norm: a + "x" + b, catIndex: 4, catName: CATS[4] };
+      }
+      return {
+        ok: false,
+        error: '"' + clean + '" invalid pair (only 1x3, 3x1 for JK or 3x3 for Sangam allowed)'
+      };
+    }
+
+    if (/^\d+$/.test(clean)) {
+      if (clean.length === 1) return { ok: true, norm: clean, catIndex: 0, catName: CATS[0] };
+      if (clean.length === 2) return { ok: true, norm: clean, catIndex: 1, catName: CATS[1] };
+      if (clean.length === 3) return { ok: true, norm: clean, catIndex: 2, catName: CATS[2] };
+      return {
+        ok: false,
+        error: '"' + clean + '" exceeds 3 digits (only 1, 2, or 3 digits allowed)'
+      };
+    }
+
+    return {
+      ok: false,
+      error: '"' + clean + '" is not a valid numerical entry'
+    };
+  }
+
+  // State
+  var heads = ld("heads", null);
+  if (!Array.isArray(heads) || !heads.length) {
+    heads = [];
+    for (var i = 1; i <= 14; i++) heads.push("MAIN HEADING " + i);
+  }
+  var hist = ld("hist", []);
+  var hi = ld("hi", 0);
+  if (hi < 0 || hi >= heads.length) hi = 0;
+  var rows = ld("draft_rows", []);
+  if (!Array.isArray(rows)) rows = [];
+  var curSlip = null;
+  var armTimers = {};
+  var editMode = "rename";
+
+  function saveDraft() {
+    sv("draft_rows", rows);
+    $("draftState").textContent = rows.length ? rows.length + " draft saved" : "Ready";
+  }
+
+  function resetArm(btn, label) {
+    if (!btn) return;
+    btn.dataset.arm = "";
+    btn.textContent = label;
+    if (armTimers[btn.id]) {
+      clearTimeout(armTimers[btn.id]);
+      delete armTimers[btn.id];
+    }
+  }
+
+  function confirmTap(btn, idleLabel, confirmLabel, action) {
+    if (btn.dataset.arm === "1") {
+      resetArm(btn, idleLabel);
+      action();
+      return;
+    }
+    btn.dataset.arm = "1";
+    btn.textContent = confirmLabel;
+    if (armTimers[btn.id]) clearTimeout(armTimers[btn.id]);
+    armTimers[btn.id] = setTimeout(function() {
+      resetArm(btn, idleLabel);
+    }, 2500);
+  }
+
+  function fillHeads() {
+    $("head").innerHTML = heads.map(function(h, i) {
+      return '<option value="' + i + '">' + esc(h) + "</option>";
+    }).join("");
+    $("head").value = hi;
+  }
+
+  function computeFiveTotals(entryRows) {
+    var sums = [0, 0, 0, 0, 0];
+    entryRows.forEach(function(r) {
+      if (r.a === null || r.a === undefined) return;
+      var ci = typeof r.cat === "number" ? r.cat : classifyNumber(r.n).catIndex;
+      if (ci >= 0 && ci < 5) sums[ci] = round2(sums[ci] + Number(r.a));
+    });
+    return sums;
+  }
+
+  function renderDesk() {
+    saveDraft();
+    $("list").innerHTML = rows.length ? rows.map(function(r, i) {
+      var pending = r.a === null;
+      return (
+        '<div class="line">' +
+          '<span class="main" data-e="' + i + '"' + (pending ? ' style="color:var(--ac)"' : "") + ">" +
+            esc(r.n) + "=" + (pending ? "?" : r.a) +
+          "</span>" +
+          '<span class="tag">' + SHORT_CATS[r.cat] + "</span>" +
+          '<a href="#" class="del-x" data-d="' + i + '" aria-label="Remove">✕</a>' +
+        "</div>"
+      );
+    }).join("") : '<div style="color:var(--mut);font-size:15px;padding:12px 0">Validated entries appear here. Tap any row to edit.</div>';
+
+    $("list").scrollTop = $("list").scrollHeight;
+
+    var sums = computeFiveTotals(rows);
+    $("liveBreakdown").innerHTML = CATS.map(function(label, idx) {
+      return '<div class="b-item"><span>' + label + "</span><span>" + sums[idx] + "</span></div>";
+    }).join("");
+
+    var grand = round2(sums.reduce(function(acc, v) { return acc + v; }, 0));
+    var pendingCount = rows.filter(function(r) { return r.a === null; }).length;
+    $("total").textContent = grand + (pendingCount ? " (" + pendingCount + " ?)" : "");
+    $("hc").textContent = hist.length;
+  }
+
+  function parseAndAdd() {
+    var raw = $("inp").value;
+    var lines = raw.split(/\r?\n|;|,+/);
+    var errors = [];
+    var leftovers = [];
+    var parsedItems = [];
+
+    lines.forEach(function(line) {
+      var l = line.trim();
+      if (!l) return;
+
+      var numPart = "";
+      var valPart = null;
+      var hasSign = false;
+
+      var pr = l.match(/^(\d+\s*[xX×]\s*\d+)\s*(.*)$/);
+      if (pr) {
+        numPart = pr[1];
+        var rest = pr[2].trim();
+        if (rest) {
+          if (!SIGNS.test(rest.charAt(0))) {
+            errors.push('"' + l + '" needs a value sign (= * # ₹ & @ - € ¢ £ $)');
+            leftovers.push(l);
+            return;
+          }
+          hasSign = true;
+          valPart = rest.slice(1).trim();
+        }
+      } else {
+        var m = l.match(SIGNS);
+        if (m) {
+          hasSign = true;
+          numPart = l.slice(0, m.index).trim();
+          valPart = l.slice(m.index + 1).trim();
+        } else {
+          numPart = l;
+        }
+      }
+
+      var cls = classifyNumber(numPart);
+      if (!cls.ok) {
+        errors.push(cls.error);
+        leftovers.push(l);
+        return;
+      }
+
+      var amount = null;
+      if (valPart !== null && valPart !== "") {
+        amount = evalMath(valPart);
+        if (isNaN(amount) || amount < 0) {
+          errors.push('"' + l + '" has an invalid amount');
+          leftovers.push(l);
+          return;
+        }
+      }
+
+      parsedItems.push({ rawLine: l, cls: cls, amount: amount, hasSign: hasSign });
+    });
+
+    // Propagate trailing value backward across unvalued notes in the batch
+    var pendingBatch = [];
+    parsedItems.forEach(function(item) {
+      if (item.amount === null && !item.hasSign) {
+        pendingBatch.push(item);
+      } else if (item.amount !== null) {
+        for (var k = 0; k < pendingBatch.length; k++) {
+          pendingBatch[k].amount = item.amount;
+        }
+        pendingBatch = [];
+      } else {
+        pendingBatch = [];
+      }
+    });
+
+    parsedItems.forEach(function(item) {
+      var cls = item.cls;
+      var amount = item.amount;
+
+      if (amount !== null) {
+        var existingPending = [];
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].a === null) existingPending.push(i);
+        }
+
+        var matchedSameNum = false;
+        for (var j = 0; j < rows.length; j++) {
+          if (rows[j].a === null && rows[j].n === cls.norm) {
+            rows[j].a = amount;
+            matchedSameNum = true;
+          }
+        }
+        if (matchedSameNum) return;
+
+        if (existingPending.length > 0 && parsedItems.length === 1) {
+          for (var p = 0; p < existingPending.length; p++) {
+            rows[existingPending[p]].a = amount;
+          }
+        }
+      }
+
+      rows.push({ n: cls.norm, a: amount, cat: cls.catIndex });
+    });
+
+    if (errors.length) {
+      $("errbox").textContent = errors.join(" • ");
+      $("errbox").classList.remove("hide");
+    } else {
+      $("errbox").classList.add("hide");
+      $("errbox").textContent = "";
+    }
+
+    $("inp").value = leftovers.join("\n");
+    renderDesk();
+    $("inp").focus();
+  }
+
+  function renderHistory() {
+    var q = ($("hsearch").value || "").trim().toLowerCase();
+    var hf = $("hfilter").value || "*";
+
+    var usedHeads = [];
+    hist.forEach(function(s) {
+      if (usedHeads.indexOf(s.head) < 0) usedHeads.push(s.head);
+    });
+    $("hfilter").innerHTML = '<option value="*">All Headings</option>' +
+      usedHeads.map(function(h) { return "<option>" + esc(h) + "</option>"; }).join("");
+    if (hf === "*" || usedHeads.indexOf(hf) >= 0) $("hfilter").value = hf;
+
+    var filtered = hist.map(function(s, idx) { return { s: s, idx: idx }; }).filter(function(item) {
+      var s = item.s;
+      if (hf !== "*" && s.head !== hf) return false;
+      if (!q) return true;
+      if (s.head.toLowerCase().indexOf(q) >= 0) return true;
+      return s.rows.some(function(r) { return String(r.n).toLowerCase().indexOf(q) >= 0; });
+    });
+
+    $("hlist").innerHTML = filtered.length ? filtered.map(function(item) {
+      var s = item.s;
+      return (
+        '<div class="h" data-v="' + item.idx + '">' +
+          "<div><b>" + esc(s.head) + "</b><br><small>" + stamp(s.t) + " · " + s.rows.length + " entries</small></div>" +
+          "<b>" + s.total + "</b>" +
+        "</div>"
+      );
+    }).join("") : '<p style="color:var(--mut);text-align:center;padding:20px 0">No matching slips found.</p>';
+  }
+
+  function renderDataTab() {
+    var names = [];
+    hist.forEach(function(s) {
+      if (names.indexOf(s.head) < 0) names.push(s.head);
+    });
+    var sel = $("dsel");
+    var prev = sel.value;
+    sel.innerHTML = (names.length > 1 ? '<option value="*">ALL HEADINGS (COMBINED)</option>' : "") +
+      names.map(function(n) { return "<option>" + esc(n) + "</option>"; }).join("");
+    if (prev && (prev === "*" || names.indexOf(prev) >= 0)) sel.value = prev;
+    drawDataReport();
+  }
+
+  function drawDataReport() {
+    var target = $("dsel").value;
+    var out = $("dout");
+    if (!target) {
+      out.innerHTML = '<p style="color:var(--mut);text-align:center;padding:20px 0">No data yet. Generate a slip first.</p>';
+      $("dtxt").value = "";
+      return;
+    }
+
+    var groups = [new Map(), new Map(), new Map(), new Map(), new Map()];
+    var groupTotals = [0, 0, 0, 0, 0];
+    var slipCount = 0;
+
+    hist.slice().reverse().forEach(function(s) {
+      if (target !== "*" && s.head !== target) return;
+      slipCount++;
+      s.rows.forEach(function(r) {
+        var cls = classifyNumber(r.n);
+        if (!cls.ok) return;
+        var gi = cls.catIndex;
+        var key = cls.norm;
+        var val = Number(r.a) || 0;
+        groups[gi].set(key, round2((groups[gi].get(key) || 0) + val));
+        groupTotals[gi] = round2(groupTotals[gi] + val);
+      });
+    });
+
+    var label = target === "*" ? "ALL HEADINGS" : target;
+    var html = "";
+    var plain = label + " (" + slipCount + " slips)\n";
+
+    groups.forEach(function(map, idx) {
+      if (!map.size) return;
+      var entries = Array.from(map.entries());
+      entries.sort(function(a, b) {
+        return a[0].localeCompare(b[0], undefined, { numeric: true });
+      });
+      var pairs = entries.map(function(kv) { return kv[0] + "=" + kv[1]; });
+      html +=
+        '<div class="stat-group">' +
+          '<div class="stat-head"><b>' + CATS[idx] + "</b><span>Total: " + groupTotals[idx] + "</span></div>" +
+          '<div class="stat-vals">' + esc(pairs.join(", ")) + "</div>" +
+        "</div>";
+      plain += "\n" + CATS[idx] + " [Total: " + groupTotals[idx] + "]\n" + pairs.join(", ") + "\n";
+    });
+
+    var grand = round2(groupTotals.reduce(function(a, b) { return a + b; }, 0));
+    if (html) {
+      html += '<div class="grand-box"><span>5-Part Grand Total</span><span>' + grand + "</span></div>";
+      plain += "\n==============================\nGRAND TOTAL: " + grand;
+    }
+
+    out.innerHTML = html || '<p style="color:var(--mut)">No entries for this selection.</p>';
+    $("dtxt").value = html ? plain : "";
+  }
+
+  function showSlip(s) {
+    curSlip = s;
+    var sums = s.partTotals || computeFiveTotals(s.rows);
+    var partLines = CATS.map(function(name, idx) {
+      return sums[idx] ? '<div class="l"><span>' + name + "</span><span>" + sums[idx] + "</span></div>" : "";
+    }).join("");
+
+    $("slip").innerHTML =
+      '<div class="ts">' + stamp(s.t) + "</div>" +
+      "<h2>" + esc(s.head) + "</h2><hr>" +
+      s.rows.map(function(r) {
+        return '<div class="l"><span>' + esc(r.n) + "</span><span>" + r.a + "</span></div>";
+      }).join("") +
+      "<hr>" + partLines +
+      '<div class="l"><b>TOTAL</b><b>' + s.total + "</b></div><hr>" +
+      "<div><b>Warning</b><br>" + WARN + "</div>";
+
+    $("app").classList.add("hide");
+    $("slipwrap").classList.remove("hide");
+  }
+
+  function formatSlipText(s) {
+    var sums = s.partTotals || computeFiveTotals(s.rows);
+    var parts = CATS.map(function(name, idx) {
+      return sums[idx] ? name + ": " + sums[idx] : "";
+    }).filter(Boolean).join("\n");
+
+    return (
+      stamp(s.t) + "\n" +
+      s.head + "\n" +
+      "--------------------\n" +
+      s.rows.map(function(r) { return r.n + " = " + r.a; }).join("\n") + "\n" +
+      "--------------------\n" +
+      (parts ? parts + "\n--------------------\n" : "") +
+      "TOTAL: " + s.total + "\n\n" +
+      "Warning:\n" + WARN
+    );
+  }
+
+  // =========================================================================
+  // GS v 0 RASTER BLUETOOTH PRINT ENGINE (SEZNIK 58mm)
+  // Restores GS v 0 (0x1D 0x76 0x30) + 64-byte chunks + 12ms/6ms pacing
+  // instead of ESC * 8-dot strips + extra LFs at job start.
+  // =========================================================================
+  var btDevice = null;
+  var btChar = null;
+  var isPrinting = false;
+
+  function renderSlipBitmap384(s, lumThreshold) {
+    var W = 384; // 58mm print head width
+    var pad = 16;
+    var sums = s.partTotals || computeFiveTotals(s.rows);
+    var activeParts = [];
+    CATS.forEach(function(name, idx) {
+      if (sums[idx]) activeParts.push({ name: name, val: sums[idx] });
+    });
+
+    var lineH = 26;
+    var estH =
+      36 +
+      40 +
+      20 +
+      (s.rows.length * lineH) +
+      20 +
+      (activeParts.length * 24) +
+      (activeParts.length ? 16 : 0) +
+      36 +
+      20 +
+      24 +
+      240 +
+      240;
+
+    var canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = estH;
+    var ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, estH);
+    ctx.fillStyle = "#000000";
+    ctx.textBaseline = "top";
+
+    var y = 8;
+
+    ctx.font = "16px monospace";
+    ctx.textAlign = "right";
+    ctx.fillText(stamp(s.t), W - pad, y);
+    y += 24;
+
+    ctx.font = "bold 22px sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(String(s.head), pad, y, W - pad * 2);
+    y += 32;
+
+    function drawDash() {
+      ctx.save();
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(pad, y + 6);
+      ctx.lineTo(W - pad, y + 6);
+      ctx.stroke();
+      ctx.restore();
+      y += 16;
+    }
+
+    drawDash();
+
+    ctx.font = "20px monospace";
+    s.rows.forEach(function(r) {
+      ctx.textAlign = "left";
+      ctx.fillText(r.n + " = " + r.a, pad, y);
+      y += lineH;
+    });
+
+    drawDash();
+
+    if (activeParts.length) {
+      ctx.font = "18px sans-serif";
+      activeParts.forEach(function(p) {
+        ctx.textAlign = "left";
+        ctx.fillText(p.name + ": " + p.val, pad, y);
+        y += 24;
+      });
+      drawDash();
+    }
+
+    ctx.font = "bold 22px monospace";
+    ctx.textAlign = "left";
+    ctx.fillText("TOTAL: " + s.total, pad, y);
+    y += 32;
+
+    drawDash();
+
+    ctx.font = "bold 17px sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("Warning:", pad, y);
+    y += 22;
+
+    ctx.font = "17px sans-serif";
+    var words = WARN.split(" ");
+    var line = "";
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + " " + words[i] : words[i];
+      if (ctx.measureText(test).width > W - pad * 2 && line) {
+        ctx.fillText(line, pad, y);
+        y += 22;
+        line = words[i];
+      } else {
+        line = test;
+      }
+    }
+    if (line) {
+      ctx.fillText(line, pad, y);
+      y += 26;
+    }
+
+    var finalH = Math.min(estH, y + 180);
+    var imgData = ctx.getImageData(0, 0, W, finalH).data;
+    var bytesPerRow = W / 8; // 48 bytes
+    var bitmap = new Uint8Array(bytesPerRow * finalH);
+
+    for (var row = 0; row < finalH; row++) {
+      for (var col = 0; col < W; col++) {
+        var idx = (row * W + col) * 4;
+        var lum = 0.299 * imgData[idx] + 0.587 * imgData[idx + 1] + 0.114 * imgData[idx + 2];
+        if (lum < lumThreshold) {
+          bitmap[row * bytesPerRow + (col >> 3)] |= (0x80 >> (col & 7));
+        }
+      }
+    }
+
+    return { bitmap: bitmap, widthBytes: bytesPerRow, height: finalH };
+  }
+
+  function handleBtDisconnected() {
+    btChar = null;
+    if (isPrinting) {
+      $("btStatus").textContent = "SEZNIK disconnected/shut off during print. Tap Bluetooth Print to reconnect.";
+    }
+  }
+
+  async function streamLowDraw(char, buffer) {
+    var useNoResp = !!(char.properties && char.properties.writeWithoutResponse);
+    var chunkSize = 64;
+    for (var i = 0; i < buffer.length; i += chunkSize) {
+      if (btDevice && btDevice.gatt && !btDevice.gatt.connected) {
+        throw new Error("Printer powered off during print.");
+      }
+      var slice = buffer.slice(i, i + chunkSize);
+      if (useNoResp) {
+        await char.writeValueWithoutResponse(slice);
+        await new Promise(function(r) { setTimeout(r, 12); });
+      } else {
+        await char.writeValue(slice);
+        await new Promise(function(r) { setTimeout(r, 6); });
+      }
+    }
+  }
+
+  async function directBluetoothPrint() {
+    if (isPrinting) return;
+    var st = $("btStatus");
+    if (!curSlip) return;
+
+    if (!navigator.bluetooth) {
+      st.textContent = "Web Bluetooth requires Google Chrome over HTTPS or localhost.";
+      return;
+    }
+
+    isPrinting = true;
+    $("btPrint").disabled = true;
+
+    try {
+      if (!btDevice || !btDevice.gatt || !btDevice.gatt.connected || !btChar) {
+        st.textContent = "Select SEZNIK printer...";
+        btDevice = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [
+            0xff00,
+            "0000ff00-0000-1000-8000-00805f9b34fb",
+            "000018f0-0000-1000-8000-00805f9b34fb",
+            "49535343-fe7d-4ae5-8fa9-9fafd205e455",
+            "e7810a71-73ae-499d-8c15-faa9aef0c3f2"
+          ]
+        });
+
+        btDevice.removeEventListener("gattserverdisconnected", handleBtDisconnected);
+        btDevice.addEventListener("gattserverdisconnected", handleBtDisconnected);
+
+        st.textContent = "Connecting to " + (btDevice.name || "SEZNIK") + "...";
+        var server = await btDevice.gatt.connect();
+        await new Promise(function(r) { setTimeout(r, 350); });
+        var services = await server.getPrimaryServices();
+
+        var foundChar = null;
+        for (var s = 0; s < services.length; s++) {
+          var chars = await services[s].getCharacteristics();
+          for (var c = 0; c < chars.length; c++) {
+            var ch = chars[c];
+            var u = ch.uuid.toLowerCase();
+            if (u.indexOf("ff02") >= 0 && (ch.properties.write || ch.properties.writeWithoutResponse)) {
+              foundChar = ch;
+              break;
+            }
+          }
+          if (foundChar) break;
+        }
+        if (!foundChar) {
+          for (var s2 = 0; s2 < services.length; s2++) {
+            var chars2 = await services[s2].getCharacteristics();
+            for (var c2 = 0; c2 < chars2.length; c2++) {
+              var ch2 = chars2[c2];
+              if (ch2.properties.write || ch2.properties.writeWithoutResponse) {
+                foundChar = ch2;
+                break;
+              }
+            }
+            if (foundChar) break;
+          }
+        }
+        if (!foundChar) throw new Error("No writable channel found on printer.");
+        btChar = foundChar;
+      }
+
+      var lumThreshold = 100;
+      st.textContent = "Printing via GS v 0 on " + (btDevice.name || "SEZNIK") + "...";
+      var r = renderSlipBitmap384(curSlip, lumThreshold);
+
+      await streamLowDraw(btChar, new Uint8Array([0x1b, 0x40]));
+      await new Promise(function(r) { setTimeout(r, 80); });
+
+      var xL = r.widthBytes & 0xff;
+      var xH = (r.widthBytes >> 8) & 0xff;
+      var yL = r.height & 0xff;
+      var yH = (r.height >> 8) & 0xff;
+      var header = new Uint8Array([0x1d, 0x76, 0x30, 0x00, xL, xH, yL, yH]);
+      var footer = new Uint8Array([0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a]);
+      var payload = new Uint8Array(header.length + r.bitmap.length + footer.length);
+      payload.set(header, 0);
+      payload.set(r.bitmap, header.length);
+      payload.set(footer, header.length + r.bitmap.length);
+
+      await streamLowDraw(btChar, payload);
+      st.textContent = "Print complete on " + (btDevice.name || "SEZNIK") + " ✓";
+    } catch (err) {
+      btChar = null;
+      st.textContent = "Print stopped: " + (err && err.message ? err.message : err);
+    } finally {
+      isPrinting = false;
+      $("btPrint").disabled = false;
+    }
+  }
+
+  function switchTab(n) {
+    resetArm($("clr"), "Clear");
+    resetArm($("dreset"), "Delete Heading Data");
+    $("desk").classList.toggle("hide", n !== 1);
+    $("hist").classList.toggle("hide", n !== 2);
+    $("data").classList.toggle("hide", n !== 3);
+    $("sync").classList.toggle("hide", n !== 4);
+    $("t1").className = n === 1 ? "on" : "";
+    $("t2").className = n === 2 ? "on" : "";
+    $("t3").className = n === 3 ? "on" : "";
+    $("t4").className = n === 4 ? "on" : "";
+    if (n === 2) renderHistory();
+    if (n === 3) renderDataTab();
+  }
+
+  // Optional Domain API Sync
+  async function pushToDomainApi() {
+    var url = ($("apiUrl").value || "").trim();
+    if (!url) return;
+    var key = ($("apiKey").value || "").trim();
+    $("syncBadge").textContent = "Syncing...";
+    try {
+      var headers = { "Content-Type": "application/json" };
+      if (key) headers["Authorization"] = "Bearer " + key;
+      var res = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ heads: heads, slips: hist, updatedAt: Date.now() })
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      $("syncBadge").textContent = "Domain Synced";
+      $("syncMsg").textContent = "Last synced at " + new Date().toLocaleTimeString();
+    } catch (e) {
+      $("syncBadge").textContent = "Sync Failed";
+      $("syncMsg").textContent = "Sync error: " + e.message;
+    }
+  }
+
+  // Event bindings
+  $("t1").onclick = function() { switchTab(1); };
+  $("t2").onclick = function() { switchTab(2); };
+  $("t3").onclick = function() { switchTab(3); };
+  $("t4").onclick = function() { switchTab(4); };
+
+  $("head").onchange = function() {
+    hi = +$("head").value;
+    sv("hi", hi);
+  };
+  $("edit").onclick = function() {
+    editMode = "rename";
+    var r = $("erow");
+    r.classList.remove("hide");
+    $("ename").placeholder = "Rename active heading";
+    $("ename").value = heads[hi];
+    $("ename").focus();
+    $("ename").select();
+  };
+  $("addHead").onclick = function() {
+    editMode = "new";
+    var r = $("erow");
+    r.classList.remove("hide");
+    $("ename").placeholder = "New heading name";
+    $("ename").value = "";
+    $("ename").focus();
+  };
+  function saveHeadingName() {
+    var v = $("ename").value.trim();
+    if (v) {
+      if (editMode === "new") {
+        var existingIdx = heads.indexOf(v);
+        if (existingIdx >= 0) {
+          hi = existingIdx;
+        } else {
+          heads.push(v);
+          hi = heads.length - 1;
+        }
+      } else {
+        heads[hi] = v;
+      }
+      sv("heads", heads);
+      sv("hi", hi);
+      fillHeads();
+      pushToDomainApi();
+    }
+    $("erow").classList.add("hide");
+  }
+  $("esave").onclick = saveHeadingName;
+  $("ename").onkeydown = function(e) { if (e.key === "Enter") saveHeadingName(); };
+
+  $("add").onclick = parseAndAdd;
+  $("list").onclick = function(e) {
+    var delIdx = e.target.getAttribute("data-d");
+    var editIdx = e.target.getAttribute("data-e");
+    if (delIdx !== null) {
+      e.preventDefault();
+      rows.splice(+delIdx, 1);
+      renderDesk();
+    } else if (editIdx !== null) {
+      var r = rows[+editIdx];
+      $("inp").value = r.a === null ? r.n + "=" : r.n + "=" + r.a;
+      rows.splice(+editIdx, 1);
+      renderDesk();
+      $("inp").focus();
+    }
+  };
+
+  $("clr").onclick = function() {
+    if (!rows.length) return;
+    confirmTap(this, "Clear", "Tap again to clear", function() {
+      rows = [];
+      $("errbox").classList.add("hide");
+      renderDesk();
+    });
+  };
+
+  $("gen").onclick = function() {
+    if (!rows.length) return;
+    var pending = rows.filter(function(r) { return r.a === null; }).length;
+    if (pending) {
+      var btn = this;
+      btn.textContent = pending + " entry needs value";
+      setTimeout(function() { btn.textContent = "Generate & Save Slip"; }, 2200);
+      return;
+    }
+    var partTotals = computeFiveTotals(rows);
+    var total = round2(partTotals.reduce(function(a, b) { return a + b; }, 0));
+    var slip = {
+      t: Date.now(),
+      head: heads[hi],
+      rows: rows.slice(),
+      partTotals: partTotals,
+      total: total
+    };
+    hist.unshift(slip);
+    sv("hist", hist);
+    rows = [];
+    renderDesk();
+    showSlip(slip);
+    pushToDomainApi();
+  };
+
+  $("hsearch").oninput = renderHistory;
+  $("hfilter").onchange = renderHistory;
+  $("hlist").onclick = function(e) {
+    var card = e.target.closest("[data-v]");
+    if (card) showSlip(hist[+card.getAttribute("data-v")]);
+  };
+
+  $("dsel").onchange = drawDataReport;
+  $("dcopy").onclick = function() {
+    var t = $("dtxt").value;
+    if (!t) return;
+    copyTextReliable(t, this, "Copy Report");
+  };
+  $("dreset").onclick = function() {
+    var target = $("dsel").value;
+    if (!target) return;
+    confirmTap(this, "Delete Heading Data", "Tap again to delete", function() {
+      hist = target === "*" ? [] : hist.filter(function(s) { return s.head !== target; });
+      sv("hist", hist);
+      renderDesk();
+      renderDataTab();
+      pushToDomainApi();
+    });
+  };
+
+  $("btPrint").onclick = directBluetoothPrint;
+  $("print").onclick = function() { window.print(); };
+  $("copy").onclick = function() {
+    if (!curSlip) return;
+    copyTextReliable(formatSlipText(curSlip), this, "Copy Slip");
+  };
+  $("shareBtn").onclick = function() {
+    if (!curSlip) return;
+    var text = formatSlipText(curSlip);
+    if (navigator.share) {
+      navigator.share({ title: curSlip.head, text: text }).catch(function() {});
+    } else {
+      copyTextReliable(text, this, "Share");
+    }
+  };
+  $("sdel").onclick = function() {
+    if (!curSlip) return;
+    confirmTap(this, "Delete Slip", "Tap again to delete", function() {
+      var ts = curSlip.t;
+      hist = hist.filter(function(s) { return s.t !== ts; });
+      sv("hist", hist);
+      renderDesk();
+      $("back").onclick();
+      pushToDomainApi();
+    });
+  };
+  $("back").onclick = function() {
+    resetArm($("sdel"), "Delete Slip");
+    $("slipwrap").classList.add("hide");
+    $("app").classList.remove("hide");
+    switchTab(1);
+  };
+
+  // Backup & Sync events
+  $("expJson").onclick = function() {
+    var blob = new Blob([JSON.stringify({ heads: heads, hist: hist }, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "slip-desk-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.click();
+  };
+  $("expCsv").onclick = function() {
+    var csv = ["Date,Heading,Category,Number,Amount"];
+    hist.forEach(function(s) {
+      var dt = new Date(s.t).toISOString();
+      s.rows.forEach(function(r) {
+        var cls = classifyNumber(r.n);
+        csv.push([
+          '"' + dt + '"',
+          '"' + String(s.head).replace(/"/g, '""') + '"',
+          '"' + (cls.ok ? cls.catName : "Other") + '"',
+          '"' + r.n + '"',
+          r.a
+        ].join(","));
+      });
+    });
+    var blob = new Blob([csv.join("\n")], { type: "text/csv" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "slip-desk-entries-" + new Date().toISOString().slice(0, 10) + ".csv";
+    a.click();
+  };
+  $("impBtn").onclick = function() {
+    var f = $("impFile").files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function() {
+      try {
+        var data = JSON.parse(reader.result);
+        if (Array.isArray(data.heads) && data.heads.length) {
+          heads = data.heads;
+          sv("heads", heads);
+          fillHeads();
+        }
+        if (Array.isArray(data.hist)) {
+          hist = data.hist;
+          sv("hist", hist);
+          renderDesk();
+        }
+        $("syncMsg").textContent = "Backup restored successfully (" + hist.length + " slips).";
+      } catch (e) {
+        $("syncMsg").textContent = "Invalid backup JSON file.";
+      }
+    };
+    reader.readAsText(f);
+  };
+
+  var savedCfg = ld("domainSync", { url: "", key: "" });
+  $("apiUrl").value = savedCfg.url || "";
+  $("apiKey").value = savedCfg.key || "";
+  if (savedCfg.url) $("syncBadge").textContent = "Domain Endpoint Set";
+
+  $("saveApi").onclick = function() {
+    var cfg = { url: $("apiUrl").value.trim(), key: $("apiKey").value.trim() };
+    sv("domainSync", cfg);
+    $("syncBadge").textContent = cfg.url ? "Domain Endpoint Set" : "Local Storage";
+    $("syncMsg").textContent = cfg.url ? "Endpoint saved." : "Endpoint cleared.";
+  };
+  $("syncNow").onclick = pushToDomainApi;
+
+  // Boot
+  fillHeads();
+  renderDesk();
+})();
+</script>
+</body>
+</html>
